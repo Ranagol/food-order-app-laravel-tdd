@@ -41,7 +41,6 @@ class SearchTest extends TestCase
     /** @test */
     public function food_can_be_searched_with_a_query()
     {
-
         Product::factory()->create([
             'name' => 'Taco'
         ]);

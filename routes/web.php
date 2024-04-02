@@ -2,34 +2,32 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 /**
+ * These are the aliases that we can use instead of typing the full command
  * alias p='vendor/bin/phpunit'
  * alias pf='vendor/bin/phpunit --filter'
  */
 
-// Route::get('/', function () {
-//     $items = App\Models\Product::all();
-//     return view('search', compact('items'));
-// });
 
 use App\Http\Controllers\SearchProductsController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', [SearchProductsController::class, 'index']);
+
 
 Route::get('/cart', function () {
     return view('cart');
 });
+
+/**
+ * When there will be a post request to /cart, the CartController@store will be called. This method
+ * pushes the given item into the session cart. So, the cart is not saved into the database, but it is
+ * saved in the session. And since the app uses blade files for the FE, therefore the blade FE
+ * has access to data in the session. We redirect the user to the same page, however now the cart
+ * is not empty, but it has the item that was added.
+ */
+Route::post('/cart', [CartController::class, 'store']);
 
 
 Route::get('/checkout', function () {
