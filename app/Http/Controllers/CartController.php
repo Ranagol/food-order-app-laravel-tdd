@@ -8,6 +8,26 @@ use App\Models\Product;
 
 class CartController extends Controller
 {
+    public function index()
+    {
+        $productIdsFromSession = collect(session('cart'))->pluck('id');
+        // dd($productIdsFromSession);//4 & 5
+        $products = Product::all();
+        dd($products);
+        $items = Product::whereIn('id', $productIdsFromSession)->get();
+        $cart_items = collect(session('cart'))->map(function ($row, $index) use ($items) {
+            return [
+                'id' => $row['id'],
+                'qty' => $row['qty'],
+                'name' => $items[$index]->name,
+                'image' => $items[$index]->image,
+                'cost' => $items[$index]->cost,
+            ];
+        })->toArray();
+
+        return view('cart', compact('cart_items'));
+    }
+
     /**
      * When there will be a post request to /cart, the CartController@store will be called. This method
      * pushes the given item into the session cart. So, the cart is not saved into the database, but it is

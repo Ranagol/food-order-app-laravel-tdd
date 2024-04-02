@@ -77,4 +77,49 @@ class CartTest extends TestCase
         $this->assertEquals(2, count(session('cart')));
     }
 
+    /** @test */
+    public function items_added_to_the_cart_can_be_seen_in_the_cart_page()
+    {
+
+        Product::factory()->create([
+            'name' => 'Taco',
+            'cost' => 1.5,
+        ]);
+        Product::factory()->create([
+            'name' => 'BBQ',
+            'cost' => 3.2,
+        ]);
+
+        $this->post('/cart', [
+            'id' => 1, // Taco
+        ]);
+        $this->post('/cart', [
+            'id' => 3, // BBQ
+        ]);
+
+        $cart_items = [
+            [
+                'id' => 1,
+                'qty' => 1,
+                'name' => 'Taco',
+                'image' => 'some-image.jpg',
+                'cost' => 1.5,
+            ],
+            [
+                'id' => 3,
+                'qty' => 1,
+                'name' => 'BBQ',
+                'image' => 'some-image.jpg',
+                'cost' => 3.2,
+            ],
+        ];
+
+        $response = $this->get('/cart');
+        $response->assertViewHas('cart_items', $cart_items);
+        $response->assertSeeTextInOrder([
+                'Taco',
+                'BBQ',
+            ]);
+
+    }
 }
