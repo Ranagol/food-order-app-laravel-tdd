@@ -18,9 +18,14 @@ use Illuminate\Support\Facades\Route;
  * alias pf='vendor/bin/phpunit --filter'
  */
 
-Route::get('/', function () {
-    return view('search');
-});
+// Route::get('/', function () {
+//     $items = App\Models\Product::all();
+//     return view('search', compact('items'));
+// });
+
+use App\Http\Controllers\SearchProductsController;
+
+Route::get('/', [SearchProductsController::class, 'index']);
 
 Route::get('/cart', function () {
     return view('cart');
